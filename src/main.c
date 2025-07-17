@@ -26,12 +26,24 @@ int main(int argc, char *argv[]){
     int tmp = 0 , x1,x2,y1,y2;
     int out[32];
     int i = 0;
+    int flag = 0;   
 
     init( board );
     printMatrice(board);
+
     for(int x = 0 ; x < 5 ; x++){
-        printf("inserisci pos iniziale (x,y)");
-        scanf("%d %d",&x1,&y1);
+        
+        do{
+            
+            printf("inserisci pos iniziale (x,y)");
+            scanf("%d %d",&x1,&y1);
+            if(board[x1][y1] == ' '){
+                printf("qui non c'%c nessun pezzo da muovere -%c- \n",138,board[x1][y1]);              
+            }
+
+        } while ( board[x1][y1] == ' ' );       
+
+
         printf("inserisci pos finale (x,y)");
         scanf("%d %d",&x2,&y2);
         out[i] = mossa(board,x1,y1,x2,y2 );
