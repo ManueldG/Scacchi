@@ -8,15 +8,25 @@ void printMatrice(int [SIZE][SIZE]);
 int mossa(int [SIZE][SIZE],int,int,int,int);
 
 /*
-matrice pezzi da rappresentare su scacchiera
+TODO - matrice pezzi da rappresentare su scacchiera
 
-rossi cod ascii x 10
+rossi cod ascii x 10 (maggiori di 192)
 verdi cod ascii
 
-mosse come creare un pattern?
-per ora mosse libere 
+IN PROGRESS creare funzione dei turni (tocca al rosso)
+e impedire di mangiare i propri pezzi
 
-controllo casella di partenza e di arrivo se c'è un pezzo
+TODO mosse come creare un pattern?per ora mosse libere 
+
+TODO avere la possibillità di recuperare i pezzi mangiati(pedone in base  avversaria)
+
+TODO arrocco (lungo corto)
+
+TODO validazione mosse
+
+TODO cronologia lista mosse
+
+DONE controllo casella di partenza e di arrivo se c'è un pezzo
 caso d'errore -spostamento o cattura
 */ 
 
@@ -27,6 +37,7 @@ int main(int argc, char *argv[]){
     int out[32];
     int i = 0;
     short int flag = 0;   
+    short int turno = 0;
 
     init( board );
     initOut(out);
@@ -36,7 +47,7 @@ int main(int argc, char *argv[]){
         
         do{
             flag = 0;
-            printf("inserisci pos iniziale x y: ");
+            printf("%s inserisci pos iniziale x y: ",(turno ? "verde": "rosso"));
             scanf("%d %d",&x1,&y1);
 
             if(board[x1][y1] == ' '){
@@ -55,11 +66,17 @@ int main(int argc, char *argv[]){
        do{
            flag = 0;
 
-           printf("inserisci pos finale x y: ");
+           printf("%s inserisci pos finale x y: ",(turno ? "verde" : "rosso"));
            scanf("%d %d",&x2,&y2);
             
-            if(board[x2][y2] != ' '){
-                printf("pezzo catturato \n");       
+            if( (board[x2][y2] != ' ')  ){
+                if( ( (turno == 0) && (board[x2][y2] > 192) ) || ( (turno == 1) && (board[x2][y2] < 192) ) ){
+                    printf("\n%c un tuo pezzo\n",138);
+                    flag = 1;
+                }else{
+                    // 192 > rosso - turno = 0  # 192 < verde - turno = 1 
+                    printf("pezzo catturato %s %c  \n",(turno ? "\e[1;31m":"\e[1;32m"),(board[x2][y2] > 192 ? board[x2][y2]/10 : board[x2][y2]));  
+                }
             }
 
              if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
@@ -67,13 +84,14 @@ int main(int argc, char *argv[]){
                 flag = 1;          
             }
 
-        } while (flag ); 
+        } while ( flag ); 
 
         out[i] = mossa(board,x1,y1,x2,y2 );
         
         printMatrice(board);
 
-        i = ( out[i] != 0 ) ? ++i :  i ;        
+        i = ( out[i] != 0 ) ? ++i :  i ; 
+        turno = !turno;       
     }
 
     int y = 0;
@@ -144,10 +162,10 @@ int mossa(int board[SIZE][SIZE],int x1,int y1,int x2,int y2){
     int tmp = 0;
 
     if (board[x2][y2] != ' '){
-        tmp = board[x2][y2];
-    }
 
-    //printf("%d \n",tmp);
+        tmp = board[x2][y2];
+
+    }
 
     board[x2][y2] = board[x1][y1];
     board[x1][y1] = ' ';
