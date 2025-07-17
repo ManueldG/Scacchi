@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "init.h" //funzioni per inizializzare la scacchiera
 #include "const.h" // constanti
 
@@ -7,22 +8,26 @@ void printMatrice(int [SIZE][SIZE]);
 
 int mossa(int [SIZE][SIZE],int,int,int,int);
 
+int * identificaPezzo(int);
+
 /*
 TODO - matrice pezzi da rappresentare su scacchiera
 
 rossi cod ascii x 10 (maggiori di 192)
 verdi cod ascii
 
-IN PROGRESS creare funzione dei turni (tocca al rosso)
+DONE creare funzione dei turni (tocca al rosso)
 e impedire di mangiare i propri pezzi
 
+TODO impedire di spostare i pezzi dell'avversario
+
 TODO mosse come creare un pattern?per ora mosse libere 
+
+TODO validazione mosse
 
 TODO avere la possibillità di recuperare i pezzi mangiati(pedone in base  avversaria)
 
 TODO arrocco (lungo corto)
-
-TODO validazione mosse
 
 TODO cronologia lista mosse
 
@@ -70,12 +75,13 @@ int main(int argc, char *argv[]){
            scanf("%d %d",&x2,&y2);
             
             if( (board[x2][y2] != ' ')  ){
-                if( ( (turno == 0) && (board[x2][y2] > 192) ) || ( (turno == 1) && (board[x2][y2] < 192) ) ){
+                if( ( (turno == identificaPezzo(board[x2][y2])[1]) ) ){
                     printf("\n%c un tuo pezzo\n",138);
+                    printf("\n%d %d\n",identificaPezzo(board[x2][y2])[1],turno);
                     flag = 1;
                 }else{
                     // 192 > rosso - turno = 0  # 192 < verde - turno = 1 
-                    printf("pezzo catturato %s %c  \n",(turno ? "\e[1;31m":"\e[1;32m"),(board[x2][y2] > 192 ? board[x2][y2]/10 : board[x2][y2]));  
+                    printf("pezzo catturato %s %c  \n",(turno ? "\e[1;31m":"\e[1;32m"), identificaPezzo(board[x2][y2])[0] );  
                 }
             }
 
@@ -98,17 +104,25 @@ int main(int argc, char *argv[]){
     int b;
     char *t;
     while( out[y] != 0 ){
-         if (out[y]>126){
 
-                b  = out[y] / 10 ;
-                t = "\e[1;31m";
+        b = identificaPezzo(out[y])[0];
+        t = (identificaPezzo(out[y])[1] ? "\e[1;32m" : "\e[1;31m") ;
 
-            }
-            else {
 
-                b = out[y];
-                t = "\e[1;32m";
-            }
+        /*
+        
+        if (out[y]>126){
+
+               b  = out[y] / 10 ;
+               t = "\e[1;31m";
+
+           }
+           else {
+
+               b = out[y];
+               t = "\e[1;32m";
+           }
+        */
 
             printf("%s %c\e[0m",t,b);
             y++;
@@ -152,7 +166,16 @@ void printMatrice(int board[SIZE][SIZE]){
         }
 
         printf("\n");
+        
+        
     }
+    /*
+    
+    int * x ;
+    x = identificaPezzo(840);
+    printf("%c %d",x[0],x[1]);
+
+    */
 
 };
 
@@ -171,6 +194,29 @@ int mossa(int board[SIZE][SIZE],int x1,int y1,int x2,int y2){
     board[x1][y1] = ' ';
 
     return tmp;
+
+}
+
+int * identificaPezzo(int pezzo){
+
+    //0 rosso - 1 verde
+
+   int* out = malloc( 2 * sizeof(int));
+
+
+     if (pezzo>126){
+
+                out[0]  = pezzo/ 10 ;
+                out[1] = 0;
+
+            }
+            else {
+
+                out[0] = pezzo;
+                out[1] = 1;
+            }
+
+            return out;
 
 }
 
