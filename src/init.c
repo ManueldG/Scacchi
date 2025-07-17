@@ -29,3 +29,10 @@
     board[3][0] = piece[5]*10; // red
     board[3][7] = piece[5]; // white
     };
+
+    void initOut(int out[32]){
+
+        for (int i = 0 ; i < 32 ; i++)
+            out[i] = 0;
+
+    };

@@ -9,6 +9,8 @@
 
     void init(int [SIZE][SIZE]);
 
+    void initOut(int []);
+
 // prototipi funzioni
 
 #endif

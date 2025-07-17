@@ -26,37 +26,56 @@ int main(int argc, char *argv[]){
     int tmp = 0 , x1,x2,y1,y2;
     int out[32];
     int i = 0;
-    int flag = 0;   
+    short int flag = 0;   
 
     init( board );
+    initOut(out);
     printMatrice(board);
 
     for(int x = 0 ; x < 5 ; x++){
         
         do{
-            
-            printf("inserisci pos iniziale (x,y)");
+            flag = 0;
+            printf("inserisci pos iniziale x y: ");
             scanf("%d %d",&x1,&y1);
+
             if(board[x1][y1] == ' '){
-                printf("qui non c'%c nessun pezzo da muovere -%c- \n",138,board[x1][y1]);              
+                printf("qui non c'%c nessun pezzo da muovere -%c- \n",138,board[x1][y1]);       
+                flag = 1;       
             }
 
-        } while ( board[x1][y1] == ' ' );       
+             if ( (x1 > 7) || (x1 < 0) || (y1 > 7) || (y1 < 0) ){
+                printf("fuori dalla scacchiera \n",board[x1][y1]);    
+                flag = 1;          
+            }
 
+        } while (flag ); 
+       // } while ( board[x1][y1] == ' ' );              
+       
+       do{
+           flag = 0;
 
-        printf("inserisci pos finale (x,y)");
-        scanf("%d %d",&x2,&y2);
+           printf("inserisci pos finale x y: ");
+           scanf("%d %d",&x2,&y2);
+            
+            if(board[x2][y2] != ' '){
+                printf("pezzo catturato \n");       
+            }
+
+             if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
+                printf("fuori dalla scacchiera \n",board[x2][y2]);    
+                flag = 1;          
+            }
+
+        } while (flag ); 
+
         out[i] = mossa(board,x1,y1,x2,y2 );
         
         printMatrice(board);
 
         i = ( out[i] != 0 ) ? ++i :  i ;        
     }
-/*
-for (int y = 0 ; y < 5; y++){
-    printf("%d-",out[y]);
-};
-*/
+
     int y = 0;
     int b;
     char *t;
@@ -128,7 +147,7 @@ int mossa(int board[SIZE][SIZE],int x1,int y1,int x2,int y2){
         tmp = board[x2][y2];
     }
 
-    printf("%d -%c-\n",tmp,' ');
+    //printf("%d \n",tmp);
 
     board[x2][y2] = board[x1][y1];
     board[x1][y1] = ' ';
