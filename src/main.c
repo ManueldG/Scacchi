@@ -14,6 +14,10 @@ rossi cod ascii x 10
 verdi cod ascii
 
 mosse come creare un pattern?
+per ora mosse libere 
+
+controllo casella di partenza e di arrivo se c'è un pezzo
+caso d'errore -spostamento o cattura
 */ 
 
 int main(int argc, char *argv[]){    
