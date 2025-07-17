@@ -19,7 +19,7 @@ verdi cod ascii
 DONE creare funzione dei turni (tocca al rosso)
 e impedire di mangiare i propri pezzi
 
-TODO impedire di spostare i pezzi dell'avversario
+DONE impedire di spostare i pezzi dell'avversario
 
 TODO mosse come creare un pattern?per ora mosse libere 
 
@@ -54,6 +54,11 @@ int main(int argc, char *argv[]){
             flag = 0;
             printf("%s inserisci pos iniziale x y: ",(turno ? "verde": "rosso"));
             scanf("%d %d",&x1,&y1);
+
+            if(identificaPezzo(board[x1][y1])[1] != turno){
+                printf("Usa un tuo pezzo \n");       
+                flag = 1;       
+            }
 
             if(board[x1][y1] == ' '){
                 printf("qui non c'%c nessun pezzo da muovere -%c- \n",138,board[x1][y1]);       
