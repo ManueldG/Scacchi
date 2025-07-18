@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 
     int board[SIZE][SIZE];
     int tmp = 0 , x1,x2,y1,y2;
-    int out[32];
+    int out[MAX_OUT];
     int i = 0;
     short int flag = 0;   
     short int turno = 0;
@@ -49,12 +49,12 @@ int main(int argc, char *argv[]){
     printf( "\e[1;1H\e[2J");
     printMatrice(board);
 
-    for(int x = 0 ; x < 5 ; x++){
+    for(int x = 0 ; x < TURNI ; x++){
 
         
         do{
             flag = 0;
-            printf("%s inserisci pos iniziale x y: ",(turno ? "verde": "rosso"));
+            printf("%s inserisci pos iniziale x y: ",(turno ? PLR_TWO: PLR_ONE));
             scanf("%d %d",&x1,&y1);
 
             if(identificaPezzo(board[x1][y1])[1] != turno){
