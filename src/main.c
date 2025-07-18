@@ -44,9 +44,9 @@ int main(int argc, char *argv[]){
     short int flag = 0;   
     short int turno = 0;
 
-    init( board );
-    initOut(out);
-    printf( "\e[1;1H\e[2J");
+    init( board ); //
+    initOut(out); //  initialize board and out <init.c>
+    printf( "\e[1;1H\e[2J"); //CLR
     printMatrice(board);
 
     for(int x = 0 ; x < TURNI ; x++){
@@ -63,31 +63,40 @@ int main(int argc, char *argv[]){
             }
 
             if(board[x1][y1] == ' '){
-                printf("qui non c'%c nessun pezzo da muovere -%c- \n",138,board[x1][y1]);       
-                flag = 1;       
+
+                printf("qui non c'%c nessun pezzo da muovere \n",138);       
+                flag = 1;     
+
             }
 
              if ( (x1 > 7) || (x1 < 0) || (y1 > 7) || (y1 < 0) ){
-                printf("fuori dalla scacchiera \n",board[x1][y1]);    
+
+                printf("fuori dalla scacchiera \n");    
                 flag = 1;          
+
             }
 
         } while (flag ); 
-       // } while ( board[x1][y1] == ' ' );              
+             
        do{
            flag = 0;
 
-           printf("%s inserisci pos finale x y: ",(turno ? "verde" : "rosso"));
+           printf("%s inserisci pos finale x y: ",(turno ? PLR_TWO : PLR_ONE));
            scanf("%d %d",&x2,&y2);
             
             if( (board[x2][y2] != ' ')  ){
+
                 if( ( (turno == identificaPezzo(board[x2][y2])[1]) ) ){
                     printf("\n%c un tuo pezzo\n",138);
                     printf("\n%d %d\n",identificaPezzo(board[x2][y2])[1],turno);
                     flag = 1;
-                }else{
+
+                }
+                else{
+
                     // 192 > rosso - turno = 0  # 192 < verde - turno = 1 
                     printf("pezzo catturato %s %c  \n",(turno ? "\e[1;31m":"\e[1;32m"), identificaPezzo(board[x2][y2])[0] );  
+                    
                 }
             }
 
