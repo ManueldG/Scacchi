@@ -14,6 +14,10 @@
 
 #define PLR_TWO "VERDE"
 
+#define COLOR_TWO "\e[1;32m"
+
+#define COLOR_ONE "\e[1;31m"
+
 extern char piece[SIZE-1];
 
 #endif

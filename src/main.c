@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "init.h" //funzioni per inizializzare la scacchiera
 #include "const.h" // constanti
 
@@ -46,11 +47,10 @@ int main(int argc, char *argv[]){
 
     init( board ); //
     initOut(out); //  initialize board and out <init.c>
-    printf( "\e[1;1H\e[2J"); //CLR
+    printf( "\e[1;1H\e[2J"); //CLS
     printMatrice(board);
 
     for(int x = 0 ; x < TURNI ; x++){
-
         
         do{
             flag = 0;
@@ -95,22 +95,32 @@ int main(int argc, char *argv[]){
                 else{
 
                     // 192 > rosso - turno = 0  # 192 < verde - turno = 1 
-                    printf("pezzo catturato %s %c  \n",(turno ? "\e[1;31m":"\e[1;32m"), identificaPezzo(board[x2][y2])[0] );  
-                    
+                    printf("pezzo catturato %s %c  \n",(turno ? COLOR_TWO : COLOR_ONE ), identificaPezzo(board[x2][y2])[0] );  
+
                 }
             }
 
              if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
-                printf("fuori dalla scacchiera \n",board[x2][y2]);    
+                printf("fuori dalla scacchiera \n");    
                 flag = 1;          
             }
 
         } while ( flag ); 
+
+      // Converting time into milli_seconds
+	int milli_seconds = 1000 * 2;
+
+	// Storing start time
+	clock_t start_time = clock();
+
+	// looping till required time is not achieved
+	while (clock() < start_time + milli_seconds)
+		;
         
-        printf( "\e[1;1H\e[2J");
+        printf( "\e[1;1H\e[2J"); //CLS
 
         out[i] = mossa(board,x1,y1,x2,y2 );
-        
+    
         printMatrice(board);
 
         i = ( out[i] != 0 ) ? ++i :  i ; 
@@ -123,25 +133,11 @@ int main(int argc, char *argv[]){
     while( out[y] != 0 ){
 
         b = identificaPezzo(out[y])[0];
-        t = (identificaPezzo(out[y])[1] ? "\e[1;32m" : "\e[1;31m") ;
+        t = (identificaPezzo(out[y])[1] ? COLOR_TWO : COLOR_ONE) ; // color green red
 
 
-        /*
-        
-        if (out[y]>126){
 
-               b  = out[y] / 10 ;
-               t = "\e[1;31m";
-
-           }
-           else {
-
-               b = out[y];
-               t = "\e[1;32m";
-           }
-        */
-
-            printf("%s %c\e[0m",t,b);
+            printf("%s %c\e[0m",t,b); // reset color
             y++;
 
     }
@@ -159,24 +155,24 @@ void printMatrice(int board[SIZE][SIZE]){
 
             if (board[x][y]>126){
 
-                b  = board[x][y] / 10 ;
-                t = "\e[1;31m";
+                b  = board[x][y] / 10 ; // identity piece
+                t = COLOR_ONE; // identify color
 
             }
             else {
 
                 b = board[x][y];
-                t = "\e[1;32m";
+                t = COLOR_TWO;
             }
 
             if((x+y)%2==0){
 
-                printf ("%s\e[40m %c \e[0m",t, b); //neroS biancoT
+                printf ("%s\e[40m %c \e[0m",t, b); //coloreTesto coloreSfondoNero 
 
             }
             else{
 
-                printf ("%s\e[47m %c \e[0m", t,b); //biancoS neroT
+                printf ("%s\e[47m %c \e[0m", t,b); //coloreTesto coloreSfondoBianco 
 
             }
 
@@ -186,13 +182,6 @@ void printMatrice(int board[SIZE][SIZE]){
         
         
     }
-    /*
-    
-    int * x ;
-    x = identificaPezzo(840);
-    printf("%c %d",x[0],x[1]);
-
-    */
 
 };
 
@@ -221,7 +210,7 @@ int * identificaPezzo(int pezzo){
    int* out = malloc( 2 * sizeof(int));
 
 
-     if (pezzo>126){
+     if (pezzo>126){ // 126 cod last letter in ascii
 
                 out[0]  = pezzo/ 10 ;
                 out[1] = 0;
