@@ -46,9 +46,11 @@ int main(int argc, char *argv[]){
 
     init( board );
     initOut(out);
+    printf( "\e[1;1H\e[2J");
     printMatrice(board);
 
     for(int x = 0 ; x < 5 ; x++){
+
         
         do{
             flag = 0;
@@ -72,7 +74,6 @@ int main(int argc, char *argv[]){
 
         } while (flag ); 
        // } while ( board[x1][y1] == ' ' );              
-       
        do{
            flag = 0;
 
@@ -96,6 +97,8 @@ int main(int argc, char *argv[]){
             }
 
         } while ( flag ); 
+        
+        printf( "\e[1;1H\e[2J");
 
         out[i] = mossa(board,x1,y1,x2,y2 );
         

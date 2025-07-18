@@ -4,6 +4,7 @@
  //inizializza la scacchiera 
 
  void init(int board[SIZE][SIZE]){
+    
         for (int y = 0 ; y <= SIZE -1 ; y++)
             for (int x = 0 ; x <= SIZE -1 ; x++)
                 board[x][y] = (char) ' '; // 176 : 219;
