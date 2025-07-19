@@ -11,6 +11,12 @@ int mossa(int [SIZE][SIZE],int,int,int,int);
 
 int * identificaPezzo(int);
 
+void stampaOut(int *);
+
+void delay(int);
+
+int checkTorre(int [SIZE][SIZE], int ,int ,int ,int );
+
 /*
 TODO - matrice pezzi da rappresentare su scacchiera
 
@@ -83,6 +89,7 @@ int main(int argc, char *argv[]){
 
            printf("%s inserisci pos finale x y: ",(turno ? PLR_TWO : PLR_ONE));
            scanf("%d %d",&x2,&y2);
+        
             
             if( (board[x2][y2] != ' ')  ){
 
@@ -95,52 +102,40 @@ int main(int argc, char *argv[]){
                 else{
 
                     // 192 > rosso - turno = 0  # 192 < verde - turno = 1 
-                    printf("pezzo catturato %s %c  \n",(turno ? COLOR_TWO : COLOR_ONE ), identificaPezzo(board[x2][y2])[0] );  
+                    printf("pezzo catturato %s %c  \n",(turno ? COLOR_ONE : COLOR_TWO ), identificaPezzo(board[x2][y2])[0] );  
 
                 }
-            }
-
-             if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
+            }else  if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
                 printf("fuori dalla scacchiera \n");    
                 flag = 1;          
             }
 
+            if (checkTorre(board,x1,x2,y1,y2) == turno){
+                printf("errore");
+            }
+
+           
+
         } while ( flag ); 
 
-      // Converting time into milli_seconds
-	int milli_seconds = 1000 * 2;
-
-	// Storing start time
-	clock_t start_time = clock();
-
-	// looping till required time is not achieved
-	while (clock() < start_time + milli_seconds)
-		;
-        
+        delay(5);
+   
         printf( "\e[1;1H\e[2J"); //CLS
 
         out[i] = mossa(board,x1,y1,x2,y2 );
     
         printMatrice(board);
 
+        stampaOut(out);
+
         i = ( out[i] != 0 ) ? ++i :  i ; 
         turno = !turno;       
     }
 
-    int y = 0;
-    int b;
-    char *t;
-    while( out[y] != 0 ){
+  //check
 
-        b = identificaPezzo(out[y])[0];
-        t = (identificaPezzo(out[y])[1] ? COLOR_TWO : COLOR_ONE) ; // color green red
-
-
-
-            printf("%s %c\e[0m",t,b); // reset color
-            y++;
-
-    }
+  
+   
 }
 
 
@@ -225,4 +220,95 @@ int * identificaPezzo(int pezzo){
             return out;
 
 }
+
+void stampaOut(int out[]){
+
+    int b = 0;
+    char *t = "";
+    int y = 0;
+    while( out[y] != 0 ){
+
+        b = identificaPezzo(out[y])[0];
+        t = (identificaPezzo(out[y])[1] ? COLOR_TWO : COLOR_ONE) ; // color green red
+
+            printf("%s %c\e[0m\n",t,b); // reset color
+            y++;
+
+    }
+}
+
+void delay(int sec){
+
+    // Converting time into milli_seconds
+    int milli_seconds = 1000 * sec;
+
+    // Storing start time
+    clock_t start_time = clock();
+
+    // looping till required time is not achieved
+    while (clock() < start_time + milli_seconds)
+    ;
+        
+
+}
+
+int checkTorre(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
+     //controllo mosse torre
+
+     // devo verificare anche il caso dove il pezzo avversario sta in mezzo al percorso 
+     // provare se pos != ' ' count++ 
+            int cx = x2 - x1;
+            int cy = y2 - y1;
+            int out = -1;
+
+            if( cx == 0 ){
+                if(y1<y2)
+                    for(int k = y1 ; k <= y2 ; k++){
+                        if( board[x1][k] != ' '  ){
+                            out = identificaPezzo(board[x1][k])[1];
+                            break;
+                        }
+                    }
+                else
+                    for(int k = y2 ; k <= y1 ; k++){
+                        if( board[x1][k] != ' ' ){
+                            out = identificaPezzo(board[x1][k])[1];
+                            break;
+                        }
+                    }                     
+            }
+            else{
+                if(x1<x2)
+                    for(int k = x1 ; k <= x2 ; k++){
+                        if( board[x1][k] != ' ' ){
+                            out = identificaPezzo(board[k][y1])[1];
+                            break;
+                        }
+                    }
+                else{
+                    for(int k = x2 ; k <= x1 ; k++){
+                        if( board[x1][k] != ' ' ){
+                            out = identificaPezzo(board[k][y1])[1];                   
+                            break;
+                        }
+                    }
+
+                }
+
+            } // fine torre
+
+            return out;
+}
+
+/*
+*int checkAlfiere(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){}
+
+posizione iniziale x1 y1 5 5
+x2 = x1++ 6 6 -> 7 7
+-> x2, x2 6 6 -> 7 7
+-> x2, x1 -  2*x1 -x2 -> 6 4 - 7 3
+-> 2*x1 - x2 -> 4 4 
+-> 2*x1 - x2, x -> 4 6 -> 3 7 
+*/ 
+
 
