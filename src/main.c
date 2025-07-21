@@ -30,7 +30,7 @@ DONE impedire di spostare i pezzi dell'avversario
 
 TODO mosse come creare un pattern?per ora mosse libere 
 
-TODO validazione mosse
+IN PROGRESS validazione mosse
 
 TODO avere la possibillità di recuperare i pezzi mangiati(pedone in base  avversaria)
 
@@ -63,12 +63,10 @@ int main(int argc, char *argv[]){
             printf("%s inserisci pos iniziale x y: ",(turno ? PLR_TWO: PLR_ONE));
             scanf("%d %d",&x1,&y1);
 
-            if(identificaPezzo(board[x1][y1])[1] != turno){
+            if( (identificaPezzo(board[x1][y1])[1] != turno) && (board[x1][y1] != ' ')){
                 printf("Usa un tuo pezzo \n");       
                 flag = 1;       
-            }
-
-            if(board[x1][y1] == ' '){
+            }else if(board[x1][y1] == ' '){
 
                 printf("qui non c'%c nessun pezzo da muovere \n",138);       
                 flag = 1;     
@@ -106,15 +104,46 @@ int main(int argc, char *argv[]){
 
                 }
             }else  if ( (x2 > 7) || (x2 < 0) || (y2 > 7) || (y2 < 0) ){
+
                 printf("fuori dalla scacchiera \n");    
                 flag = 1;          
+
             }
 
-            if (checkTorre(board,x1,x2,y1,y2) == turno){
-                printf("errore");
+            switch ( identificaPezzo(board[x1][y1])[0] ) {
+                case 'T':
+                    printf("Torre");
+                      if(!checkTorre(board,x1,x2,y1,y2)){
+
+                            printf(" \e[0m mossa non valida \n"); 
+                            turno = !turno;
+                            flag = 1;
+                            break;
+
             }
 
-           
+                    break;
+                case 'C':
+                    printf("Cavallo");
+                    break;
+                case 'A':
+                    printf("Alfiere");
+                    break;
+                case 'R':
+                    printf("Re");
+                    break;
+                case 'D':
+                    printf("Regina");
+                    break;
+                case 'p':
+                    printf("pedone");
+                    break;
+                default:
+                    printf("sconosciuto");
+            }
+            
+          
+                       
 
         } while ( flag ); 
 
@@ -122,19 +151,21 @@ int main(int argc, char *argv[]){
    
         printf( "\e[1;1H\e[2J"); //CLS
 
-        out[i] = mossa(board,x1,y1,x2,y2 );
-    
-        printMatrice(board);
+        printf("%d\n",flag);
 
-        stampaOut(out);
+        if(!flag){
+
+            out[i] = mossa(board,x1,y1,x2,y2 );        
+            
+            stampaOut(out);
+
+        }
+
+        printMatrice(board);
 
         i = ( out[i] != 0 ) ? ++i :  i ; 
         turno = !turno;       
-    }
-
-  //check
-
-  
+    }  //check  
    
 }
 
@@ -255,41 +286,57 @@ void delay(int sec){
 int checkTorre(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
      //controllo mosse torre
 
-     // devo verificare anche il caso dove il pezzo avversario sta in mezzo al percorso 
-     // provare se pos != ' ' count++ 
+     /*devo verificare anche il caso dove un qualunque pezzo sia in mezzo al percorso 
+      provare se pos != ' ' count++ 
+      inutile restituire se il pezzo è dell'avverario
+      restituisco 1 se la mossa è valida 0 in caso contrario
+     */
             int cx = x2 - x1;
             int cy = y2 - y1;
-            int out = -1;
+            int out = 1;
+
+            //la torre si muove orizzontalmente o verticalmente deve risultare o cx = 0 o cy = 0 altrimenti non è una mossa valida
+            // poi controllare se in mezzo al percorso ci sono dei pezzi non importa quali [x1,y2] o [y1,y2] estremi esclusi
 
             if( cx == 0 ){
-                if(y1<y2)
-                    for(int k = y1 ; k <= y2 ; k++){
-                        if( board[x1][k] != ' '  ){
-                            out = identificaPezzo(board[x1][k])[1];
+                if( y1 < y2 )
+                    for(int k = y1 + 1 ; k < y2 ; k++){
+
+                        if( board[x1][k] != ' ' ){
+
+                            out = 0;
                             break;
+
                         }
                     }
                 else
-                    for(int k = y2 ; k <= y1 ; k++){
+                    for(int k = y2 ; k <= y1 - 1 ; k++){
+
                         if( board[x1][k] != ' ' ){
-                            out = identificaPezzo(board[x1][k])[1];
+
+                            out = 0;
                             break;
                         }
                     }                     
             }
-            else{
+            else if( cy == 0 ){
                 if(x1<x2)
-                    for(int k = x1 ; k <= x2 ; k++){
+                    for(int k = x1 + 1 ; k < x2 ; k++){
+
                         if( board[x1][k] != ' ' ){
-                            out = identificaPezzo(board[k][y1])[1];
+                            out = 0;
                             break;
+
                         }
                     }
                 else{
-                    for(int k = x2 ; k <= x1 ; k++){
+                    for(int k = x2 + 1 ; k < x1 ; k++){
+
                         if( board[x1][k] != ' ' ){
-                            out = identificaPezzo(board[k][y1])[1];                   
+
+                            out = 0;                   
                             break;
+
                         }
                     }
 
