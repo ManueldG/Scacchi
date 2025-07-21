@@ -17,6 +17,8 @@ void delay(int);
 
 int checkTorre(int [SIZE][SIZE], int ,int ,int ,int );
 
+int checkAlfiere(int [SIZE][SIZE], int ,int ,int ,int );
+
 /*
 TODO - matrice pezzi da rappresentare su scacchiera
 
@@ -45,14 +47,16 @@ caso d'errore -spostamento o cattura
 int main(int argc, char *argv[]){    
 
     int board[SIZE][SIZE];
-    int tmp = 0 , x1,x2,y1,y2;
     int out[MAX_OUT];
+
+    int tmp = 0 , x1,x2,y1,y2;
     int i = 0;
     short int flag = 0;   
     short int turno = 0;
 
     init( board ); //
     initOut(out); //  initialize board and out <init.c>
+    
     printf( "\e[1;1H\e[2J"); //CLS
     printMatrice(board);
 
@@ -118,9 +122,7 @@ int main(int argc, char *argv[]){
                             printf(" \e[0m mossa non valida \n"); 
                             turno = !turno;
                             flag = 1;
-                            break;
-
-            }
+                    }
 
                     break;
                 case 'C':
@@ -128,6 +130,12 @@ int main(int argc, char *argv[]){
                     break;
                 case 'A':
                     printf("Alfiere");
+                     if(!checkAlfiere(board,x1,x2,y1,y2)){
+
+                        turno = !turno;
+                        flag = 1;
+                        printf(" \e[0m mossa non valida %d %d \n",flag,turno); 
+                    }
                     break;
                 case 'R':
                     printf("Re");
@@ -140,10 +148,10 @@ int main(int argc, char *argv[]){
                     break;
                 default:
                     printf("sconosciuto");
-            }
+            }  
             
-          
-                       
+            if (flag==1)
+                break;
 
         } while ( flag ); 
 
@@ -164,7 +172,9 @@ int main(int argc, char *argv[]){
         printMatrice(board);
 
         i = ( out[i] != 0 ) ? ++i :  i ; 
+        
         turno = !turno;       
+        
     }  //check  
    
 }
@@ -347,8 +357,43 @@ int checkTorre(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
             return out;
 }
 
+int checkAlfiere(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
+     //controllo mosse alfiere
+
+            int cx = x2 - x1;
+            int cy = y2 - y1;
+
+            int out = 0;            
+            //controllo movimento giusto
+
+            printf(" %d %d %d", cx, cy, abs(cx/cy));   
+            
+            if( abs(cx/cy) == 1){
+                out = 1;
+                if(x1 < x2){
+                    for(int k = x1 + 1 ; k < x2 ; k++) 
+                        if( board[k][y1 + k + 1] != ' ' ){ // 3,5 - 
+                            out = 0;
+                        }
+                }
+                else{
+                    for(int k = x2 + 1 ; k < x1 ; k++)  
+                        if( board[k][y2 - k] != ' ' ){   
+                            out = 0;
+                        }
+                }
+            }
+            else{
+                out = 0;
+            }
+            
+
+            return out;
+}
+
+
 /*
-*int checkAlfiere(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){}
+int checkAlfiere(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){}
 
 posizione iniziale x1 y1 5 5
 x2 = x1++ 6 6 -> 7 7
