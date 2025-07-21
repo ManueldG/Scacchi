@@ -8,7 +8,7 @@
 
 #define MAX_OUT 32
 
-#define TURNI 5
+#define TURNI 10
 
 #define PLR_ONE "rosso"
 

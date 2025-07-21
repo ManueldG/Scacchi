@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 
     init( board ); //
     initOut(out); //  initialize board and out <init.c>
-    
+
     printf( "\e[1;1H\e[2J"); //CLS
     printMatrice(board);
 
@@ -330,19 +330,19 @@ int checkTorre(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
                     }                     
             }
             else if( cy == 0 ){
-                if(x1<x2)
+                if( x1 < x2 )
                     for(int k = x1 + 1 ; k < x2 ; k++){
-
-                        if( board[x1][k] != ' ' ){
+                        
+                        if( board[k][y1] != ' ' ){
                             out = 0;
                             break;
 
                         }
                     }
                 else{
-                    for(int k = x2 + 1 ; k < x1 ; k++){
+                    for(int k = x2 ; k < x1 - 1; k++){
 
-                        if( board[x1][k] != ' ' ){
+                        if( board[k][y1] != ' ' ){
 
                             out = 0;                   
                             break;
