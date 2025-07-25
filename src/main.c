@@ -65,11 +65,12 @@ DONE impedire di spostare i pezzi dell'avversario
 DONE controllo casella di partenza e di arrivo se c'è un pezzo
 caso d'errore -spostamento o cattura
 
+DONE cronologia lista mosse (salvare in array)
+
 IN PROGRESS validazione mosse  (torre alfiere cavallo regina Re)( pedone da fare) quasi fatto 
 
 IN PROGRESS errori appaiono tutti insieme da sistemare
 
-TODO cronologia lista mosse (salvare in array)
 
 TODO avere la possibillità di recuperare i pezzi mangiati(pedone in base  avversaria)
 
@@ -193,7 +194,7 @@ int main(int argc, char *argv[]){
                      if(!checkAlfiere(board,x1,x2,y1,y2)){
 
                         flag = 1;
-                        printf(" \e[0m mossa non valida %d \n",flag);  //DEBUG flag turno
+                        printf(" \e[0m mossa non valida \n");  
 
                     }
                     break;
@@ -202,17 +203,17 @@ int main(int argc, char *argv[]){
                     if( !checkRe(board,x1,x2,y1,y2) ){
 
                         flag = 1;
-                        printf(" \e[0m mossa non valida %d \n",flag);  //DEBUG flag turno
+                        printf(" \e[0m mossa non valida \n");  
 
                     }
                     break;
                 case 'D':
                     printf("Regina");
-                    printf(" \e[0m check %d %d \n", checkAlfiere(board,x1,x2,y1,y2)  , checkTorre(board,x1,x2,y1,y2)  ); //DEBUG
+                    //printf(" \e[0m check %d %d \n", checkAlfiere(board,x1,x2,y1,y2)  , checkTorre(board,x1,x2,y1,y2)  ); //DEBUG
 
                     if( !( ( !checkAlfiere(board,x1,x2,y1,y2) && checkTorre(board,x1,x2,y1,y2) ) || ( checkAlfiere(board,x1,x2,y1,y2) && !checkTorre(board,x1,x2,y1,y2) ) )){
 
-                        printf(" \e[0m mossa non valida %d %d \n", checkAlfiere(board,x1,x2,y1,y2)  , checkTorre(board,x1,x2,y1,y2)  ); 
+                        printf(" \e[0m mossa non valida \n"); 
 
                         flag = 1;
 
@@ -223,7 +224,7 @@ int main(int argc, char *argv[]){
                     if( !checkPedone(board,x1,x2,y1,y2) ){
 
                         flag = 1;
-                        printf(" \e[0m mossa non valida %d \n",flag);  //DEBUG flag turno
+                        printf(" \e[0m mossa non valida\n");  
 
                     }
 
@@ -252,7 +253,7 @@ int main(int argc, char *argv[]){
    
         //printf( "\e[1;1H\e[2J"); //DEBUG CLS 
 
-        printf("# flag = %d#\n",flag); //DEBUG
+        //printf("# flag = %d#\n",flag); //DEBUG
 
         if(!flag){
 
@@ -472,7 +473,7 @@ int checkAlfiere(int board[SIZE][SIZE], int x1,int x2,int y1,int y2){
             int out = 0;            
             //controllo movimento giusto
 
-            printf("| %d|", abs(cx/cy));   //DEBUG
+            //printf("| %d|", abs(cx/cy));   //DEBUG
             
             if( abs(cx/cy) == 1){
 
@@ -532,7 +533,7 @@ int checkRe(int board[SIZE][SIZE],int x1,int x2,int y1,int y2){
 
     int out = pattern[1+dx][1+dy];
 
-    printf("%d",out);
+    //printf("%d",out); //DEBUG 0 -1 -> 1,0
 
     return out;
 }
