@@ -25,6 +25,32 @@ int checkRe(int [SIZE][SIZE],int ,int ,int ,int );
 
 int checkPedone(int [SIZE][SIZE],int ,int ,int ,int );
 
+ typedef struct i
+    {
+        int x;
+        int y;
+    } iniziale_type;
+
+    typedef struct f
+    {
+        int x;
+        int y;
+    } finale_type;
+
+
+typedef struct crn
+{
+    char pezzo;
+    int player;
+    iniziale_type iniziale;
+    finale_type finale;
+   
+    
+} crono;
+
+crono cron[TURNI];
+
+
 /*
 TODO - matrice pezzi da rappresentare su scacchiera
 
@@ -39,17 +65,17 @@ DONE impedire di spostare i pezzi dell'avversario
 DONE controllo casella di partenza e di arrivo se c'è un pezzo
 caso d'errore -spostamento o cattura
 
-IN PROGRESS mosse come creare un pattern?per ora mosse libere (torre alfiere cavallo regina)(Re pedone da fare) 
+IN PROGRESS validazione mosse  (torre alfiere cavallo regina Re)( pedone da fare) quasi fatto 
 
-IN PROGRESS validazione mosse
+IN PROGRESS errori appaiono tutti insieme da sistemare
+
+TODO cronologia lista mosse (salvare in array)
 
 TODO avere la possibillità di recuperare i pezzi mangiati(pedone in base  avversaria)
 
 TODO arrocco (lungo corto)
 
-TODO cronologia lista mosse
 
-TODO errori appaiono tutti insieme
 
 */ 
 
@@ -205,6 +231,15 @@ int main(int argc, char *argv[]){
                 default:
                     printf("sconosciuto");
             }  
+
+            cron[x].pezzo = identificaPezzo(board[x1][y1])[0];
+            cron[x].player = identificaPezzo(board[x1][y1])[1];
+            cron[x].iniziale.x = x1;
+            cron[x].iniziale.y = y1;
+
+            cron[x].finale.x = x2;
+            cron[x].finale.y = y2;
+            
             
             if (flag==1){
                 turno = !turno;
@@ -234,6 +269,11 @@ int main(int argc, char *argv[]){
         turno = !turno;       
         
     }  //check  
+
+    for( int j = 0 ; j < TURNI ; j++ ){
+            
+            printf("%s %c \e[0m( %c , %d ) -> ( %c , %d )\n", cron[j].player ? COLOR_ONE: COLOR_TWO, cron[j].pezzo, cron[j].iniziale.x + 65 , cron[j].iniziale.y + 1, cron[j].finale.x + 65 , cron[j].finale.y + 1 );
+    }
    
 }
 
